@@ -57,24 +57,28 @@
 
             <!-- Content Row -->
             <div class="row">
-                <div id="sdb-div">
+                <div id="sdb-div" class="col-md-3">
                     <!-- Sidebar Column -->
-                    <div class="col-md-3"  data-bind="html: view.sidebar">
-                        <?php echo $sidebar; ?>
+                    <div data-bind="html: view.sidebar">
+                        <?php// echo $sidebar; ?>
                     </div>
                 </div>
-
-
-                <div id="cnt-div">
+                <div id="cnt-div" class="col-md-9">
                     <!--Content Column--> 
-                    <div class="col-md-9"  data-bind="html: view.content">
-                        <?php echo $content ?>
+                    <div data-bind="html: view.content">
+                        <?php //echo $content ?>
                     </div>
-
+                    
+                    <div data-bind="foreach: view.content_multi ">
+                        <div data-bind="template: { name: template(), data: data }"></div>   
+                    </div>
+                    
+                    
                 </div>
+                
 
-                <div id="cnt-div-full">
-                    <div class="col-lg-12" data-bind="html: view.content_full">
+                <div id="cnt-div-full" class="col-lg-12">
+                    <div data-bind="html: view.content_full">
                         <?php echo $content_full ?>
                     </div>
                 </div>
@@ -89,16 +93,23 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <p data-bind="text: view.footer"><?php echo $footer; ?></p>
-                        
+
                         <strong>Debug info -</strong>
                         <pre data-bind="text: ko.toJSON(hash, null, 2) "> </pre>
-                        
+                        <pre data-bind="text: ko.toJSON(view, null, 2) "> </pre>
+
                     </div>
                 </div>
             </footer>
 
         </div>
         <!-- /.container -->
+        
+
+        <script id="dfltTmpl" type="text/html">
+            <div data-bind="html: content "></div>
+        </script>
+
 
         <!-- jQuery -->
         <script src="<?php echo base_url() ?>theme/modern-business/js/jquery.js"></script>
@@ -108,18 +119,32 @@
 
         <script type="text/javascript">
 
+
+            // Boilerplate for multi_content
+            function MC_Model(key, template, data) {
+                this.key = key;
+                this.template = ko.observable(template);
+                this.data = data;
+            }
+
             // Layout App View Model
             function AppViewModel() {
                 this.footer = ko.observable("<?php echo $footer; ?>");
                 this.page_header = ko.observable("<?php echo $page_header; ?>");
                 this.page_subheader = ko.observable("<?php echo $page_subheader; ?>");
                 this.active_breadcrumb = ko.observable("<?php echo $active_breadcrumb; ?>");
-                
+
                 this.content_full = ko.observable();
                 this.sidebar = ko.observable();
                 this.content = ko.observable();
-                
-                this.sub_content_1 = ko.observable();
+
+                this.content_multi = ko.observableArray([<?php
+                    $mcItems = array();
+                    foreach ($content_multi as $anMCItemKey => $anMCItem){
+                        $mcItems[] = "new MC_Model('$anMCItemKey', 'dfltTmpl', { content: '$anMCItem' })";
+                    }
+                    echo implode(",", $mcItems);
+                ?>]);
 
             }
 
@@ -131,8 +156,15 @@
                 this.__content_full = ko.observable("<?php echo md5($content_full); ?>");
                 this.__sidebar = ko.observable("<?php echo md5($sidebar); ?>");
                 this.__content = ko.observable("<?php echo md5($content); ?>");
-                
-                this.__sub_content_1 = ko.observable();
+
+                this.__content_multi = ko.observable('<?php
+                    $mcItems = array();
+                    foreach ($content_multi as $anMCItemKey => $anMCItem){
+                        $mcItems[$anMCItemKey] = md5($anMCItem) ;
+                    }
+                    echo json_encode($mcItems);
+                ?>');
+
             }
 
             var vMod = {
@@ -159,7 +191,7 @@
                 koController(url);   //Request JSon
 
                 return false;   //Dont reload
-            }  
+            }
 
             function hash(s) {
                 return s.split("").reduce(function(a, b) {
@@ -184,13 +216,69 @@
                         // Now use this data to update your view models, 
                         // and Knockout will update your UI automatically 
 
+
+
+
                         // Update view model properties and corresponding hashes
                         for (var prop in json) {
-                            if(prop[1]=='_'){
-                                vMod.hash[prop](json[prop]);
+                            
+                            
+                            if(prop === 'content_multi'){
+                                
+                                var idstokeep = [];
+                                var idstodelete = [];
+                                
+                                var hashJson = JSON.parse(json["__content_multi"]);
+                                delete json["__content_multi"];
+                                
+                                for (var MCHashItemKey in hashJson){
+                                    console.log("Key is " + MCHashItemKey + ", value is" + hashJson[MCHashItemKey]);
+                                    idstokeep.push(MCHashItemKey); //These things are going to stay on the view or get updated.
+                                }    
+                                
+                                for(var i=0 ; i< vMod.view.content_multi().length ; i++){
+                                    console.log("now working on "+vMod.view.content_multi()[i].key);
+                                    
+                                    var thisKey = vMod.view.content_multi()[i].key;
+                                    
+                                    if(idstokeep.indexOf(thisKey) === -1){
+                                        //This does not belong here,
+                                        idstodelete.push(thisKey); 
+                                    }
+                                }
+                                
+                                for(var i=0 ; i< idstodelete.length ; i++){
+                                    vMod.view.content_multi.remove(function(item) { return item.key === idstodelete[i] });
+                                    console.log("removed");
+                                }
+                                
+                                
+                                console.log(vMod.view.content_multi());
+                                
+                                
+                                
+                                for (var MCItemKey in json["content_multi"]){
+                                    console.log("Key is " + MCItemKey + ", value is" + json["content_multi"][MCItemKey]);                                    
+                                    //arrValues.indexOf('Sam') > -1
+                                }  
+                                
+                                console.log(idstokeep);
+                                
+                                
+//                                content_multi = ko.observableArray([
+//                                    new MC_Model('$anMCItemKey', 'dfltTmpl', { content: '$anMCItem' })
+//                                ]);
                             }else{
-                                vMod.view[prop](json[prop]);  //vMod.view.footer(json.footer);
+                                
+                                //Regular case
+                                if (prop[1] == '_') {
+                                    vMod.hash[prop](json[prop]);
+                                } else {
+                                    vMod.view[prop](json[prop]);  //vMod.view.footer(json.footer);
+                                }
                             }
+                            
+                            
                         }
 
                         $("a.ko_link").unbind("click");

@@ -37,6 +37,12 @@ class Home extends CI_Controller {
             "sidebar" => sline($this->load->view("app/components/sidebar", null, true)),
             "content" => "This is home page text, with an <h3>H3 Tag</h3>",
             "content_full" => "",
+            "content_multi" => array(
+                "view_nam_1" => "<h4>some text here  </h4>",
+                "view_nam_2" => "<h4>some text here 2</h4>",
+                "view_nam_3" => "<h4>some text here 3</h4>",
+                "view_nam_4" => "<h4>some text here 4</h4>"
+            ),
             "footer" => "Copyright &copy; Your Website 2014"
         ));
     }
@@ -61,6 +67,10 @@ class Home extends CI_Controller {
             "active_breadcrumb" => "Page",
             "content_full" => "",
             "content" => "This is a sample page Content, This is a sample page Content, This is a sample page Content, This is a sample page Content, This is a sample page Content, This is a sample page Content, This is a sample page Content, This is a sample page Content, This is a sample page Content, This is a sample page Content. Got it",
+            "content_multi" => array(
+                "view_nam_1" => "<h4>some text here  </h4>",
+                "view_nam_7" => "<h4>some text here 7</h4>"
+            ),
             "sidebar" => sline($this->load->view("app/components/sidebar", null, true))
         ));
     }
@@ -79,7 +89,7 @@ class Home extends CI_Controller {
         $this->pagination->initialize($config);
 
         $gData = array(
-            "person_data" => $this->content->selectPersons($offset,$config['per_page']),
+            "person_data" => $this->content->selectPersons($offset, $config['per_page']),
             "pagination" => $this->pagination->create_links()
         );
 
@@ -129,6 +139,38 @@ class Home extends CI_Controller {
 
         $DOM_MD5 = $this->input->post(NULL, true);
 
+
+        $oldContentHash = json_decode($DOM_MD5["__content_multi"], true);
+
+        $targetContents = array();
+        $targetContentHash = array(); 
+        
+        //Handle content_multi if exist
+        if (isset($this->ajxLayout["content_multi"])) {
+            
+            $targetContents = $this->ajxLayout["content_multi"];        //This is whats supposed to look like
+            unset($this->ajxLayout["content_multi"]);
+
+            foreach ($targetContents as $targetViewName => $aTargetItem) {
+                $targetContentHash[$targetViewName] = md5($aTargetItem);
+
+                if (isset($oldContentHash[$targetViewName])) {
+                    //Same view name Exists already
+                    if ($targetContentHash[$targetViewName] === $oldContentHash[$targetViewName]) {
+                        //Erase same view with same data
+                        unset($targetContents[$targetViewName]);                    //Remove item which already exists.
+                    }
+                }
+            }
+            
+            $targetContentHash = json_encode($targetContentHash);
+            
+        }
+
+        //All old data removed from response, now remove old data from dom that does not belong to the new data
+
+
+
         foreach ($this->ajxLayout as $key => $anItem) {
 
             //Its an element
@@ -143,6 +185,9 @@ class Home extends CI_Controller {
                 }
             }
         }
+        
+        $this->ajxLayout["content_multi"] = $targetContents;
+        $this->ajxLayout["__content_multi"] = $targetContentHash;        
     }
 
 }
