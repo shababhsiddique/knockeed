@@ -67,6 +67,11 @@ class Home extends CI_Controller {
     
     public function grid(){
         
+        /*
+         * Pagination
+         */
+        
+        
         $gData = array(
             "person_data" => $this->content->selectPersons()
         );
