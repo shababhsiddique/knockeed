@@ -225,22 +225,21 @@
                             
                             if(prop === 'content_multi'){
                                 
+                                console.log("Working on "+prop);
                                 var idstokeep = [];
                                 var idstodelete = [];
                                 
                                 var hashJson = JSON.parse(json["__content_multi"]);
+                                vMod.hash["__content_multi"](json["__content_multi"]);
                                 delete json["__content_multi"];
                                 
                                 for (var MCHashItemKey in hashJson){
-                                    console.log("Key is " + MCHashItemKey + ", value is" + hashJson[MCHashItemKey]);
                                     idstokeep.push(MCHashItemKey); //These things are going to stay on the view or get updated.
+                                    
                                 }    
                                 
                                 for(var i=0 ; i< vMod.view.content_multi().length ; i++){
-                                    console.log("now working on "+vMod.view.content_multi()[i].key);
-                                    
-                                    var thisKey = vMod.view.content_multi()[i].key;
-                                    
+                                    var thisKey = vMod.view.content_multi()[i].key;                                    
                                     if(idstokeep.indexOf(thisKey) === -1){
                                         //This does not belong here,
                                         idstodelete.push(thisKey); 
@@ -249,26 +248,17 @@
                                 
                                 for(var i=0 ; i< idstodelete.length ; i++){
                                     vMod.view.content_multi.remove(function(item) { return item.key === idstodelete[i] });
-                                    console.log("removed");
                                 }
                                 
                                 
-                                console.log(vMod.view.content_multi());
-                                
-                                
-                                
                                 for (var MCItemKey in json["content_multi"]){
-                                    console.log("Key is " + MCItemKey + ", value is" + json["content_multi"][MCItemKey]);                                    
-                                    //arrValues.indexOf('Sam') > -1
+                                    //Add new arrived items
+                                    vMod.view.content_multi.push(new MC_Model(MCItemKey, 'dfltTmpl', { content: json["content_multi"][MCItemKey] }));
                                 }  
-                                
-                                console.log(idstokeep);
-                                
-                                
-//                                content_multi = ko.observableArray([
-//                                    new MC_Model('$anMCItemKey', 'dfltTmpl', { content: '$anMCItem' })
-//                                ]);
+
                             }else{
+                                
+                                console.log("Working on "+prop);
                                 
                                 //Regular case
                                 if (prop[1] == '_') {
