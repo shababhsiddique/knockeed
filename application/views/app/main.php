@@ -159,7 +159,7 @@
                 koController(url);   //Request JSon
 
                 return false;   //Dont reload
-            }
+            }  
 
             function hash(s) {
                 return s.split("").reduce(function(a, b) {

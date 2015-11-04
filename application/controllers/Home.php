@@ -12,8 +12,8 @@ class Home extends CI_Controller {
 
         $this->ajxLayout = array();
         $this->layout = array();
-        
-        $this->load->model('app/content_model',"content");
+
+        $this->load->model('app/content_model', "content");
 
         $this->layout = array(
             "navbar" => sline($this->load->view("app/components/navbar", null, true)),
@@ -63,28 +63,33 @@ class Home extends CI_Controller {
             "sidebar" => sline($this->load->view("app/components/sidebar", null, true))
         ));
     }
-    
-    
-    public function grid(){
-        
+
+    public function grid($offset = 0) {
+
         /*
-         * Pagination
+         * Pagination,
          */
-        
-        
+        $config = pagination_config(array(
+            'base_url' => site_url('home/grid'),
+            'total_rows' => $this->content->countAllPersons(),
+            'per_page' => 5
+        ));
+
+        $this->pagination->initialize($config);
+
         $gData = array(
-            "person_data" => $this->content->selectPersons()
+            "person_data" => $this->content->selectPersons($offset,$config['per_page']),
+            "pagination" => $this->pagination->create_links()
         );
-        
+
         $this->_setLayout(array(
             "page_header" => "Grid Example",
             "page_subheader" => "This is an example of table",
             "active_breadcrumb" => "Grid",
             "content_full" => "",
-            "sidebar" => sline($this->load->view("app/components/sidebar", null, true)),            
+            "sidebar" => sline($this->load->view("app/components/sidebar", null, true)),
             "content" => sline($this->load->view("app/components/table", $gData, true))
         ));
-        
     }
 
     /**
@@ -104,9 +109,9 @@ class Home extends CI_Controller {
      * @param type $array containing all view elements
      */
     private function _setLayout($array) {
-        
+
         $this->ajxLayout = $array;
-        
+
         if ($this->input->is_ajax_request()) {
             $this->_calcVModHash();
             echo json_encode($this->ajxLayout);
