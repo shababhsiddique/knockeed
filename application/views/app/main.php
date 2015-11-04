@@ -229,32 +229,36 @@
                                 var idstokeep = [];
                                 var idstodelete = [];
                                 
-                                var hashJson = JSON.parse(json["__content_multi"]);
-                                vMod.hash["__content_multi"](json["__content_multi"]);
-                                delete json["__content_multi"];
-                                
-                                for (var MCHashItemKey in hashJson){
-                                    idstokeep.push(MCHashItemKey); //These things are going to stay on the view or get updated.
-                                    
-                                }    
-                                
-                                for(var i=0 ; i< vMod.view.content_multi().length ; i++){
-                                    var thisKey = vMod.view.content_multi()[i].key;                                    
-                                    if(idstokeep.indexOf(thisKey) === -1){
-                                        //This does not belong here,
-                                        idstodelete.push(thisKey); 
+                                console.log(json["__content_multi"]);
+                                if(json["__content_multi"].length < 1){
+                                    console.log("No multi here");
+                                    vMod.view.content_multi.removeAll();
+                                }else{
+                                    var hashJson = JSON.parse(json["__content_multi"]);
+                                    vMod.hash["__content_multi"](json["__content_multi"]);
+                                    delete json["__content_multi"];
+
+                                    for (var MCHashItemKey in hashJson){
+                                        idstokeep.push(MCHashItemKey); //These things are going to stay on the view or get updated.
+                                    }    
+
+                                    for(var i=0 ; i< vMod.view.content_multi().length ; i++){
+                                        var thisKey = vMod.view.content_multi()[i].key;                                    
+                                        if(idstokeep.indexOf(thisKey) === -1){
+                                            //This does not belong here,
+                                            idstodelete.push(thisKey); 
+                                        }
                                     }
+
+                                    for(var i=0 ; i< idstodelete.length ; i++){
+                                        vMod.view.content_multi.remove(function(item) { return item.key === idstodelete[i] });
+                                    }
+
+                                    for (var MCItemKey in json["content_multi"]){
+                                        //Add new arrived items
+                                        vMod.view.content_multi.push(new MC_Model(MCItemKey, 'dfltTmpl', { content: json["content_multi"][MCItemKey] }));
+                                    }  
                                 }
-                                
-                                for(var i=0 ; i< idstodelete.length ; i++){
-                                    vMod.view.content_multi.remove(function(item) { return item.key === idstodelete[i] });
-                                }
-                                
-                                
-                                for (var MCItemKey in json["content_multi"]){
-                                    //Add new arrived items
-                                    vMod.view.content_multi.push(new MC_Model(MCItemKey, 'dfltTmpl', { content: json["content_multi"][MCItemKey] }));
-                                }  
 
                             }else{
                                 

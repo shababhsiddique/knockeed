@@ -23,7 +23,7 @@ class Home extends CI_Controller {
             "sidebar" => sline($this->load->view("app/components/sidebar", null, true)),
             "content" => "",
             "content_full" => "",
-            "multi_content" => array(),
+            "content_multi" => array(),
             "footer" => "Copyright &copy; Your Website 2014",
         );
     }
