@@ -59,35 +59,24 @@
             <div class="row">
                 <div id="sdb-div" class="col-md-3">
                     <!-- Sidebar Column -->
-                    <div data-bind="html: view.sidebar">
-                        <?php// echo $sidebar; ?>
-                    </div>
+                    <div data-bind="html: view.sidebar"></div>
                 </div>
                 <div id="cnt-div" class="col-md-9">
                     <!--Content Column--> 
-                    <div data-bind="html: view.content">
-                        <?php //echo $content ?>
-                    </div>
+                    <div data-bind="html: view.content"></div>
                     
                     <div data-bind="foreach: view.content_multi ">
                         <div data-bind="template: { name: template(), data: data }"></div>   
                     </div>
-                    
-                    
                 </div>
-                
 
                 <div id="cnt-div-full" class="col-lg-12">
-                    <div data-bind="html: view.content_full">
-                        <?php echo $content_full ?>
-                    </div>
+                    <div data-bind="html: view.content_full"></div>
                 </div>
 
             </div>
             <!-- /.row -->
-
             <hr>
-
             <!-- Footer -->
             <footer>
                 <div class="row">
@@ -96,15 +85,12 @@
 
                         <strong>Debug info -</strong>
                         <pre data-bind="text: ko.toJSON(hash, null, 2) "> </pre>
-                        <pre data-bind="text: ko.toJSON(view, null, 2) "> </pre>
-
                     </div>
                 </div>
             </footer>
 
         </div>
         <!-- /.container -->
-        
 
         <script id="dfltTmpl" type="text/html">
             <div data-bind="html: content "></div>
@@ -118,7 +104,6 @@
         <script src="<?php echo base_url() ?>theme/modern-business/js/bootstrap.min.js"></script>
 
         <script type="text/javascript">
-
 
             // Boilerplate for multi_content
             function MC_Model(key, template, data) {
@@ -172,17 +157,13 @@
                 hash: new ViewHashModel()
             };
 
-
             //HTML observables
             vMod.view.content_full('<?php echo $content_full; ?>');
             vMod.view.sidebar('<?php echo $sidebar; ?>');
             vMod.view.content('<?php echo $content; ?>');
 
-
             // Activates knockout.js
             ko.applyBindings(vMod);
-
-
 
             function clickHandler() {
 
@@ -216,12 +197,8 @@
                         // Now use this data to update your view models, 
                         // and Knockout will update your UI automatically 
 
-
-
-
                         // Update view model properties and corresponding hashes
                         for (var prop in json) {
-                            
                             
                             if(prop === 'content_multi'){
                                 
@@ -272,7 +249,6 @@
                                 }
                             }
                             
-                            
                         }
 
                         $("a.ko_link").unbind("click");
@@ -291,7 +267,5 @@
                 };
             });
         </script>
-
-        <!--<script type="text/javascript" src="resource/js/script.js"></script>-->
     </body>
 </html>
