@@ -2,7 +2,7 @@
 What is Knocked
 ###################
 
-Knocked is a custom starter project for developing single page applications. It is powered by CodeIgniter and KnockoutJS
+Knocked is a custom starter project for developing single page applications. It is powered by CodeIgniter v3.0.3 and KnockoutJS v3.3.0
 
 ###################
 What is CodeIgniter

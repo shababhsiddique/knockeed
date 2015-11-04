@@ -94,7 +94,7 @@ class Home extends CI_Controller {
     /**
      * Sets the layout array. Previously known as-
      * 
-     *      $this->layout["name"]
+     *      $this->layout["viewvariable"]
      * 
      * @param type $array containing all view elements
      */
