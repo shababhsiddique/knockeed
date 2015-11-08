@@ -1,21 +1,15 @@
 <IfModule mod_rewrite.c>
 
-DirectoryIndex index.php 
-RewriteEngine On
+RewriteEngine on
 RewriteBase /knocked
 RewriteCond $1 !^(index\.php|images|css|js|robots\.txt|favicon\.ico) 
 RewriteCond %{REQUEST_FILENAME} !-f 
 RewriteCond %{REQUEST_FILENAME} !-d 
-RewriteRule ^(.*)$ ./index.php/$1 [L,QSA] 
+RewriteRule ^(.*)$ /knocked/index.php/$1 [L,QSA] 
+
+AddOutputFilterByType DEFLATE text/xml text/css text/javascript 
 
 </IfModule>
-
-<ifmodule mod_deflate.c>
-AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript
-BrowserMatch ^Mozilla/4 gzip-only-text/html
-BrowserMatch ^Mozilla/4\.0[678] no-gzip
-BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
-</ifmodule>
 
 <IfModule mod_expires.c>
   ExpiresActive on
