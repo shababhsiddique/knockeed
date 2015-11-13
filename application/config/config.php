@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://dev.sitelook.co/knocked/';
+$config['base_url'] = 'http://101.11.11.101/knocked/';
 
 /*
 |--------------------------------------------------------------------------

@@ -103,6 +103,47 @@ class Home extends CI_Controller {
         ));
     }
 
+    public function form($id = 0) {
+
+        $action = $this->input->post("action");
+        if($action == "submit"){
+            
+            $this->content->savePerson($this->input->post(NULL,TRUE),$id);
+        }
+        
+        //Common stuff
+        $layoutData = array(
+            "active_breadcrumb" => "form",
+            "content_full" => "",
+            "sidebar" => sline($this->load->view("app/components/sidebar", null, true))
+        );
+        
+        if($id == 0){
+            $layoutData["page_header"] = "Add Person";
+            $layoutData["page_subheader"] = "Add New Person Data";
+            $layoutData["content"] = sline($this->load->view("app/components/form", null , true));
+        }else{
+            
+            $formData["oldData"] = $this->content->selectPersonById($id);
+            
+            $layoutData["page_header"] = "Edit Person";
+            $layoutData["page_subheader"] = "Edit Person Data";
+            $layoutData["content"] = sline($this->load->view("app/components/form", $formData, true));
+        }
+        
+        $this->_setLayout($layoutData);    
+        
+    }
+    
+    
+    
+    public function delete($id = 0,$oldUrlSeg2,$oldUrlSeg3=0){
+        if($id != 0){
+            $this->content->deletePerson($id);
+        }        
+        $this->$oldUrlSeg2($oldUrlSeg3);
+    }
+
     /**
      * 
      * 
@@ -143,11 +184,11 @@ class Home extends CI_Controller {
         $oldContentHash = json_decode($DOM_MD5["__content_multi"], true);
 
         $targetContents = array();
-        $targetContentHash = array(); 
-        
+        $targetContentHash = array();
+
         //Handle content_multi if exist
         if (isset($this->ajxLayout["content_multi"])) {
-            
+
             $targetContents = $this->ajxLayout["content_multi"];        //This is whats supposed to look like
             unset($this->ajxLayout["content_multi"]);
 
@@ -162,9 +203,8 @@ class Home extends CI_Controller {
                     }
                 }
             }
-            
+
             $targetContentHash = json_encode($targetContentHash);
-            
         }
 
         //All old data removed from response, now remove old data from dom that does not belong to the new data
@@ -185,9 +225,9 @@ class Home extends CI_Controller {
                 }
             }
         }
-        
+
         $this->ajxLayout["content_multi"] = $targetContents;
-        $this->ajxLayout["__content_multi"] = $targetContentHash;        
+        $this->ajxLayout["__content_multi"] = $targetContentHash;
     }
 
 }

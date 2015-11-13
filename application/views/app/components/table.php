@@ -1,3 +1,8 @@
+<div class="col-md-12">
+    <div class="btn-group pull-right">
+        <a class="btn btn-primary btn-sm ko_link" href="<?php echo site_url("home/form/0")?>"><span class="glyphicon glyphicon-plus"></span> New</a>
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -19,8 +24,8 @@
                 <td><?php echo $aPerson['person_email'] ?></td>
                 <td>
                     <div class="btn-group pull-right" role="group">
-                        <a class="btn btn-sm btn-primary" href="<?php echo site_url("home/person/$aPerson[person_id]") ?>"><i class="glyphicon glyphicon-pencil"></i> </a>
-                        <a class="btn btn-sm btn-primary" href="<?php echo site_url("home/deleteperson/$aPerson[person_id]") ?>"><i class="glyphicon glyphicon-time"></i></a>
+                        <a class="btn btn-sm btn-primary ko_link" href="<?php echo site_url("home/form/$aPerson[person_id]") ?>"><i class="glyphicon glyphicon-pencil"></i> </a>
+                        <a class="btn btn-sm btn-primary ko_link" href="<?php echo site_url("home/delete/$aPerson[person_id]/".$this->uri->segment(2)."/".$this->uri->segment(3)) ?>"><i class="glyphicon glyphicon-time"></i></a>
                     </div>
                 </td>
             </tr>
