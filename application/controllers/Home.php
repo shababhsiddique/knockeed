@@ -178,7 +178,7 @@ class Home extends CI_Controller {
      */
     private function _calcVModHash() {
 
-        $DOM_MD5 = $this->input->post(NULL, true);
+        $DOM_MD5 = $this->input->get(NULL, true);
 
 
         $oldContentHash = json_decode($DOM_MD5["__content_multi"], true);

@@ -7,6 +7,19 @@ function clickHandler() {
     return false;   //Dont reload
 }
 
+function submitHandler() {
+    console.log("submitted");
+    var url = window.location.href; //or $(this).attr("action");  
+
+    data = $(this).serializeArray();
+    data.push({name: 'action', value: "submit"});
+
+    console.log(data);
+    koController(url, data);
+    
+    return false;
+}
+
 function hash(s) {
     return s.split("").reduce(function(a, b) {
         a = ((a << 5) - a) + b.charCodeAt(0);
@@ -14,14 +27,17 @@ function hash(s) {
     }, 0);
 }
 
-function koController(url) {
+function koController(url, postData) {
 
-    var vModHash = vMod;
+    /*var data = vMod.hash;
+    if (typeof postData !== 'undefined') {
+        data['post'] = postData;        
+    }*/
 
     $.ajax({
         type: "POST",
-        url: url,
-        data: vMod.hash,
+        url: url+"?"+jQuery.param(vMod.hash),
+        data: postData,
         dataType: "json",
         success: function(json) {
             //Change URL
@@ -95,12 +111,13 @@ function koController(url) {
 function rebind() {
     $("a.ko_link").unbind("click");
     $("a.ko_link").bind("click", clickHandler);
-    
+
+    $("form.ko_form").submit(submitHandler);
 }
 
 $(document).ready(function() {
     rebind();
-    
+
     window.onpopstate = function(event) {
         location.reload();              //Back button ajax not yet implemented, will reload actual site.                   
     };

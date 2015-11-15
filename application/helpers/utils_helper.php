@@ -6,6 +6,17 @@
  * and open the template in the editor.
  */
 
+
+function processAjaxPost(){
+    $current_post = $_POST['post'];
+    $actualPost = array();
+    
+    foreach($current_post as $anEntry){
+        $actualPost[$anEntry['name']] = $anEntry['value'];
+    }
+    return $actualPost;
+}
+
 /**
  * get a newline free version of html
  * @param type $str
@@ -28,7 +39,7 @@ function pagination_config($array) {
         'per_page' => 5,
         'uri_segment' => 3,
         'num_links' => 2,
-        'reuse_query_string' => true,
+        //'reuse_query_string' => true,
         'full_tag_open' => '<nav class="pull-right"><ul class="pagination">',
         'full_tag_close' => '</nav></ul>',
         'first_tag_open' => '<li>',

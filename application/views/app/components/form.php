@@ -1,4 +1,4 @@
-<form action="" method="POST" class="form-horizontal">
+<form action="" method="POST" class="form-horizontal ko_form">
     <fieldset>
         <legend>Person</legend>
         <?php
