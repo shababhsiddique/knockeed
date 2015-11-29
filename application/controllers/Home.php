@@ -142,6 +142,8 @@ class Home extends CI_Controller {
             $this->content->deletePerson($id);
         }        
         $this->$oldUrlSeg2($oldUrlSeg3);
+        redirect("home/$oldUrlSeg2/$oldUrlSeg3");
+        //$this->$oldUrlSeg2($oldUrlSeg3);
     }
 
     /**

@@ -1,7 +1,10 @@
+var GLOBALTHIS;
 function clickHandler() {
 
     //Do this when link clicked-
     var url = $(this).attr("href");   //Get link
+    GLOBALTHIS = this;
+    
     koController(url);   //Request JSon
 
     return false;   //Dont reload
@@ -41,7 +44,10 @@ function koController(url, postData) {
         dataType: "json",
         success: function(json) {
             //Change URL
-            window.history.pushState({state: 'new'}, json.page_header, url);
+
+            if($(GLOBALTHIS).hasClass("ko_nuc") === false){
+                window.history.pushState({state: 'new'}, json.page_header, url);
+            }
 
             // Now use this data to update your view models, 
             // and Knockout will update your UI automatically 

@@ -25,7 +25,7 @@
                 <td>
                     <div class="btn-group pull-right" role="group">
                         <a class="btn btn-sm btn-primary ko_link" href="<?php echo site_url("home/form/$aPerson[person_id]") ?>"><i class="glyphicon glyphicon-pencil"></i> </a>
-                        <a class="btn btn-sm btn-primary ko_link" href="<?php echo site_url("home/delete/$aPerson[person_id]/".$this->uri->segment(2)."/".$this->uri->segment(3)) ?>"><i class="glyphicon glyphicon-time"></i></a>
+                        <a class="btn btn-sm btn-primary ko_link ko_nuc" href="<?php echo site_url("home/delete/$aPerson[person_id]/".$this->uri->segment(2)."/".$this->uri->segment(3)) ?>"><i class="glyphicon glyphicon-time"></i></a>
                     </div>
                 </td>
             </tr>
